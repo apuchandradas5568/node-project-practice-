@@ -1,7 +1,8 @@
 // check usrname, password in post login request
 
 const jwt = require("jsonwebtoken");
-const CustomAPIError = require("../errors/custom-error");
+const {BadRequestErrorError} = require("../errors");
+
 // console.log(process.env.JWT_SECRET);
 //  if exists create new JWT
 
@@ -17,7 +18,7 @@ const login = async (req, res) => {
 
   // check in the controller
   if (!username || !password) {
-    throw new CustomAPIError("please provide email and password", 400);
+    throw new BadRequestErrorError("please provide email and password");
   }
   const id = new Date().getDate();
 
@@ -28,29 +29,18 @@ const login = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new CustomAPIError("No token provided", 401);
-  }
-
-  const token = authHeader.split(" ")[1];
-  // console.log(token);
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log(decoded);
+    console.log(req.user);
     const luckyNumber = Math.floor(Math.random() * 100);
     res.status(200).json({
-      msg: `Hello, ${decoded.username}`,
+      msg: `Hello, ${req.user.username}`,
       secret: `Here is your authorized data ${luckyNumber}`,
     });
-  } catch (error) {
-    throw new CustomAPIError("Not  authorized access to this route", 401);
-  }
+
 };
 
 module.exports = {
   login,
   dashboard,
 };
+
+// 6:14 minutes
