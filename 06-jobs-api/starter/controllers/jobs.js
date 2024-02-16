@@ -66,5 +66,3 @@ module.exports = {
   updateJob,
   deleteJob,
 };
-
-// 8:31
